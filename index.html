@@ -1,54 +1,63 @@
+<!DOCTYPE html>
 <html>
 <body>
 
 
+<div id="googleMap" style="width:100%;height:400px;"></div>
+
 <script>
-async function main(){
-	var x = document.getElementById("demo");
-	//function getLomaication() {
-	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(showPosition);
-	}/* else { 
-		x.innerHTML = "Geolocation is not supported by this browser.";
-	}*/
+
+var map = new google.maps.Map();
+function buttonPress() {
+	var lat = parseFloat(document.getElementById("flat").value);
+	var lng = parseFloat(document.getElementById("flng").value);
+	alert(lng);
+
+	
+	addMarker(lat, lng);
 }
-//}
 
-function showPosition(position) {
-    //document.write("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
-	post('locationfetcher.php',{id:parseInt(document.getElementById("id").value),latitude:position.coords.latitude,longitude:position.coords.longitude});
-}
-function post(path, params, method) {
-    method = method || "put" // Set method to post by default if not specified.
+function main() {
+	var mapProp = {
+		center: new google.maps.LatLng(54.77,-1.577),
+		zoom:13,
+	};
+	map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+};
 
-    // The rest of this code assumes you are not using a library.
-    // It can be made less wordy if you use one.
-    var form = document.createElement("form");
-    form.setAttribute("method", method);
-    form.setAttribute("action", path);
-    for(var key in params) {
-        if(params.hasOwnProperty(key)) {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", key);
-			document.write(key);
-            hiddenField.setAttribute("value", params[key]);
-
-            form.appendChild(hiddenField);
-        }
-    }
-
-    document.body.appendChild(form);
-    form.submit();
-}
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function addMarker(lat, lng) {	
+	
+	var marker1 = new google.maps.Marker({
+		position: {lat: lat, lng: lng},
+		map: map,
+		title: "Test"
+	});
+};
+function loadDoc() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+			document.getElementById("test").innerHTML=this.responseText;
+            addMarker(parseFloat(this.responseText.split(" ")[0]),parseFloat(this.responseText.split(" ")[1]));
+       }
+    };
+    xhttp.open("POST", "ajaxphp.php", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("id="+document.getElementById("flat").value);
 }
 </script>
-<form type="text" id="frm1">
-<input type="text" id="id">
+
+<form type="text" id="frm1" >
+<input id="flat"><br>
 </form>
-<button type="button" onclick="main()">done</button>
+<p id="test">click refresh to see the coordinates!</p>
+
+<button type="button" onclick="loadDoc()">refresh</button>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBej7vrT8gwwPc6ldYZRR-4zdU3it-gxM&callback=main"></script>
+
+
 </body>
 </html>
-
