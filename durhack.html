@@ -2,34 +2,63 @@
 <html>
 <body>
 
-<h1>My First Google Map</h1>
+<?php
+
+$x = $_POST["flat"]
+$y = $_POST["flng"]
+
+echo $x
+echo $y
+
+?>
 
 <div id="googleMap" style="width:100%;height:400px;"></div>
 
 <script>
-function myMap() {
 
-var myLatLng = {lat: 54.77, lng: -1.577};
+var map = new google.maps.Map();
 
-var mapProp= {
-    center: new google.maps.LatLng(54.77,-1.577),
-    zoom:13,
+function main() {
+	var mapProp = {
+		center: new google.maps.LatLng(54.77,-1.577),
+		zoom:13,
+	};
+	map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 };
-var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
 
-
-
-var marker = new google.maps.Marker({
-	position: myLatLng,
-	map: map,
-	title: "Test"
-});
-		
+function addMarker(lat, lng) {	
+	var marker1 = new google.maps.Marker({
+		position: {lat: lat, lng: lng},
+		map: map,
+		title: "Test"
+	});
 };
-	
+
 </script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBej7vrT8gwwPc6ldYZRR-4zdU3it-gxM&callback=myMap"></script>
+<form type="text" id="frm1" action="durhack.html" method="post">
+<input id="flat"><br>
+<input id="flng"><br>
+</form>
+
+<script>
+
+function buttonPress() {
+	var lat = parseFloat(document.getElementById("flat").value);
+	var lng = parseFloat(document.getElementById("flng").value);
+	alert(lng);
+
+	
+	addMarker(lat, lng);
+}
+
+</script>
+
+<button type="button" onclick="buttonPress()"> Add a Pointer </button>
+
+
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBBej7vrT8gwwPc6ldYZRR-4zdU3it-gxM&callback=main"></script>
 
 
 </body>
